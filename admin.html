@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Панель агента · Vast-Clever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F4F8F5;--surface:#FFFFFF;--surface2:#E8F5ED;
+  --primary:#1A7A3C;--primary2:#145C2D;--primaryL:#D1EAD9;
+  --accent:#F59E0B;--text:#0F2117;--text2:#4A6358;--text3:#8FA89A;
+  --border:#D8EAE0;--red:#DC2626;--redL:#FEE2E2;
+  --shadow:0 1px 4px rgba(0,0,0,0.07),0 4px 16px rgba(0,0,0,0.05);
+  --radius:14px;--transition:0.18s ease;
+}
+[data-theme="night"]{
+  --bg:#0F1923;--surface:#1A2535;--surface2:#1E3040;
+  --primary:#22C55E;--primary2:#16A34A;--primaryL:#14532D;
+  --accent:#FACC15;--text:#E2F0E8;--text2:#8FB5A0;--text3:#4A6A58;
+  --border:#1E3A2A;--red:#F87171;--redL:#2D1515;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:32px 26px;width:100%;max-width:380px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.login-logo .ic{width:40px;height:40px;background:var(--primary);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.login-logo .tt{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--primary)}
+.login-sub{font-size:0.8rem;color:var(--text3);margin-bottom:22px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:0.76rem;color:var(--text2);font-weight:600}
+.field input,.field textarea,.field select{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.9rem;padding:11px 13px;outline:none;transition:border-color var(--transition);width:100%}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary)}
+.field textarea{resize:none;min-height:70px}
+.btn{background:var(--primary);color:#fff;border:none;border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.92rem;padding:13px 18px;cursor:pointer;transition:background var(--transition),transform 0.1s;width:100%}
+.btn:hover{background:var(--primary2)}
+.btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn-sm{width:auto;padding:8px 14px;font-size:0.8rem;border-radius:9px}
+.btn-ghost{background:var(--surface2);color:var(--text2)}
+.btn-ghost:hover{background:var(--border);color:var(--text)}
+.btn-danger{background:var(--red)}
+.btn-danger:hover{background:#b91c1c}
+.login-err{background:var(--redL);color:var(--red);border-radius:9px;padding:9px 12px;font-size:0.8rem;font-weight:600;margin-bottom:14px;display:none}
+
+/* APP */
+.app{display:none;max-width:760px;margin:0 auto;padding:0 16px 80px}
+header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:18px}
+.head-in{max-width:760px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.head-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary);display:flex;align-items:center;gap:8px}
+.head-actions{display:flex;gap:8px;align-items:center}
+.head-actions a{color:var(--text3);text-decoration:none;font-size:0.8rem;font-weight:600;padding:8px 10px;border-radius:9px}
+.head-actions a:hover{background:var(--surface2);color:var(--primary)}
+
+.section{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1rem;color:var(--text)}
+.muted{font-size:0.78rem;color:var(--text3);line-height:1.5}
+
+.prod-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.prod-row:last-child{border-bottom:none}
+.prod-emoji{width:42px;height:42px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;flex-shrink:0}
+.prod-emoji img{width:100%;height:100%;object-fit:cover}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-meta{font-size:0.74rem;color:var(--text3);margin-top:2px}
+.prod-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:all var(--transition);color:var(--text2)}
+.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
+.icon-btn.del:hover{border-color:var(--red);color:var(--red)}
+
+/* availability switch */
+.switch{position:relative;width:42px;height:24px;flex-shrink:0;cursor:pointer}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:var(--border);border-radius:24px;transition:background var(--transition)}
+.slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform var(--transition)}
+.switch input:checked + .slider{background:var(--primary)}
+.switch input:checked + .slider::before{transform:translateX(18px)}
+
+.oos-tag{font-size:0.66rem;font-weight:700;color:var(--red);background:var(--redL);padding:2px 7px;border-radius:5px}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:18px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;padding:24px;transform:scale(0.96);transition:transform 0.2s}
+.overlay.open .modal{transform:scale(1)}
+.modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--primary);color:#fff;padding:12px 20px;border-radius:30px;font-size:0.85rem;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,0.25);z-index:300;transition:transform 0.3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:30px 10px;color:var(--text3)}
+.empty .ei{font-size:2.4rem;display:block;margin-bottom:10px;opacity:0.6}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo"><div class="ic">🏪</div><div class="tt">VastClever</div></div>
+    <div class="login-sub">Панель торгового агента</div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="field"><label>Эл. почта</label><input type="email" id="liEmail" placeholder="agent@work.local" autocomplete="username"/></div>
+    <div class="field"><label>Пароль</label><input type="password" id="liPass" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="btn" id="loginBtn">Войти</button>
+    <p class="muted" style="margin-top:14px;text-align:center"><a href="index.html" style="color:var(--text3)">← К каталогу</a></p>
+  </div>
+</div>
+
+<!-- APP -->
+<header class="app-header" style="display:none" id="appHeader">
+  <div class="head-in">
+    <div class="head-title">⚙️ Agent paneli</div>
+    <div class="head-actions">
+      <a href="index.html">Каталог ↗</a>
+      <button class="icon-btn" id="logoutBtn" title="Выйти">⏻</button>
+    </div>
+  </div>
+</header>
+
+<div class="app" id="app">
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Товары</div>
+      <button class="btn btn-sm" id="addBtn">+ Добавить</button>
+    </div>
+    <div id="prodList"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:6px">Настройки Telegram</div>
+    <p class="muted" style="margin-bottom:14px">Заказы отправляются в этот чат. Токен бота можно сменить в любой момент.</p>
+    <div class="field"><label>Токен бота</label><input type="text" id="tgToken" placeholder="123456:ABC-DEF..."/></div>
+    <div class="field"><label>Chat ID</label><input type="text" id="tgChat" placeholder="-1001234567890"/></div>
+    <button class="btn" id="saveTgBtn">Сохранить настройки</button>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="overlay" id="prodOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Новый товар</div>
+    <div class="field"><label>Название</label><input type="text" id="pName" placeholder="Coca-Cola 0.5л"/></div>
+    <div class="row2">
+      <div class="field"><label>Категория</label><input type="text" id="pCat" placeholder="Напитки"/></div>
+      <div class="field"><label>Единица</label><input type="text" id="pUnit" placeholder="шт / пач / бут"/></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Цена (сум)</label><input type="number" id="pPrice" placeholder="4500" min="0"/></div>
+      <div class="field"><label>Emoji иконка</label><input type="text" id="pEmoji" placeholder="🥤" maxlength="4"/></div>
+    </div>
+    <div class="field"><label>URL картинки (необязательно)</label><input type="text" id="pImg" placeholder="https://…"/></div>
+    <div class="field"><label>Описание</label><textarea id="pDesc" placeholder="Подробное описание товара"></textarea></div>
+    <div class="field" style="flex-direction:row;align-items:center;justify-content:space-between">
+      <label style="margin:0">В наличии</label>
+      <label class="switch"><input type="checkbox" id="pAvail" checked/><span class="slider"></span></label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancelProd">Отмена</button>
+      <button class="btn" id="saveProd">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8tZFleurFtQ853x9Vg8nDtXTK-8OfU-w",
+  authDomain: "work-75ea3.firebaseapp.com",
+  databaseURL: "https://work-75ea3-default-rtdb.firebaseio.com",
+  projectId: "work-75ea3",
+  storageBucket: "work-75ea3.firebasestorage.app",
+  messagingSenderId: "242303548843",
+  appId: "1:242303548843:web:90cd54e2880ee43f13e6ee",
+  measurementId: "G-J0DFTRSTLY"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+if (localStorage.getItem('theme') === 'night') document.body.dataset.theme = 'night';
+
+let products = [];
+let editingId = null;
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── AUTH ── */
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('liPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+async function doLogin(){
+  const email = document.getElementById('liEmail').value.trim();
+  const pass  = document.getElementById('liPass').value;
+  const err   = document.getElementById('loginErr');
+  const btn   = document.getElementById('loginBtn');
+  err.style.display='none';
+  btn.disabled=true; btn.textContent='Вход…';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = 'Неверная почта или пароль'; err.style.display='block';
+  } finally {
+    btn.disabled=false; btn.textContent='Войти';
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, user => {
+  const loggedIn = !!user;
+  document.getElementById('loginWrap').style.display = loggedIn ? 'none' : 'flex';
+  document.getElementById('appHeader').style.display = loggedIn ? 'block' : 'none';
+  document.getElementById('app').style.display = loggedIn ? 'block' : 'none';
+  if (loggedIn) initApp();
+});
+
+/* ── DATA ── */
+function initApp(){
+  onValue(ref(db, 'products'), snap => {
+    const val = snap.val();
+    products = val ? (Array.isArray(val) ? val.filter(Boolean) : Object.values(val)) : [];
+    renderProducts();
+  });
+  onValue(ref(db, 'config'), snap => {
+    const v = snap.val() || {};
+    document.getElementById('tgToken').value = v.token || '';
+    document.getElementById('tgChat').value  = v.chatId || '';
+  });
+}
+
+function renderProducts(){
+  const list = document.getElementById('prodList');
+  if (!products.length) {
+    list.innerHTML = '<div class="empty"><span class="ei">📦</span><p>Нет товаров. Нажмите «Добавить».</p></div>';
+    return;
+  }
+  list.innerHTML = '';
+  products.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'prod-row';
+    const img = p.img ? `<img src="${esc(p.img)}" alt="">` : esc(p.emoji||'📦');
+    row.innerHTML = `
+      <div class="prod-emoji">${img}</div>
+      <div class="prod-info">
+        <div class="prod-name">${esc(p.name)} ${!p.available ? '<span class="oos-tag">нет в наличии</span>' : ''}</div>
+        <div class="prod-meta">${esc(p.cat)} · ${Number(p.price).toLocaleString()} сум/${esc(p.unit)}</div>
+      </div>
+      <div class="prod-actions">
+        <label class="switch" title="Наличие"><input type="checkbox" class="av-toggle" ${p.available?'checked':''}/><span class="slider"></span></label>
+        <button class="icon-btn edit" title="Изменить">✏️</button>
+        <button class="icon-btn del" title="Удалить">🗑</button>
+      </div>`;
+    list.appendChild(row);
+    row.querySelector('.av-toggle').addEventListener('change', e => toggleAvail(p.id, e.target.checked));
+    row.querySelector('.edit').addEventListener('click', () => openModal(p.id));
+    row.querySelector('.del').addEventListener('click', () => removeProduct(p.id));
+  });
+}
+
+/* ── WRITE HELPERS (bump version on every change) ── */
+async function persist(newProducts){
+  await set(ref(db, 'products'), newProducts);
+  await update(ref(db, 'meta'), { version: Date.now(), updatedAt: serverTimestamp() });
+}
+
+async function toggleAvail(id, val){
+  const next = products.map(p => p.id === id ? {...p, available: val} : p);
+  await persist(next);
+  toast(val ? 'Товар снова в наличии' : 'Товар скрыт из продажи');
+}
+
+async function removeProduct(id){
+  const p = products.find(x => x.id === id);
+  if (!confirm(`Удалить «${p ? p.name : ''}»?`)) return;
+  await persist(products.filter(x => x.id !== id));
+  toast('Товар удалён');
+}
+
+/* ── MODAL (add / edit) ── */
+const overlay = document.getElementById('prodOverlay');
+document.getElementById('addBtn').addEventListener('click', () => openModal(null));
+document.getElementById('cancelProd').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.getElementById('saveProd').addEventListener('click', saveProduct);
+
+function openModal(id){
+  editingId = id;
+  const p = id ? products.find(x => x.id === id) : null;
+  document.getElementById('modalTitle').textContent = p ? 'Изменить товар' : 'Новый товар';
+  document.getElementById('pName').value  = p ? p.name : '';
+  document.getElementById('pCat').value   = p ? p.cat : '';
+  document.getElementById('pUnit').value  = p ? p.unit : '';
+  document.getElementById('pPrice').value = p ? p.price : '';
+  document.getElementById('pEmoji').value = p ? (p.emoji||'') : '';
+  document.getElementById('pImg').value   = p ? (p.img||'') : '';
+  document.getElementById('pDesc').value  = p ? (p.desc||'') : '';
+  document.getElementById('pAvail').checked = p ? !!p.available : true;
+  overlay.classList.add('open');
+}
+function closeModal(){ overlay.classList.remove('open'); editingId = null; }
+
+async function saveProduct(){
+  const name = document.getElementById('pName').value.trim();
+  const cat  = document.getElementById('pCat').value.trim();
+  const unit = document.getElementById('pUnit').value.trim();
+  const price= parseInt(document.getElementById('pPrice').value)||0;
+  const emoji= document.getElementById('pEmoji').value.trim() || '📦';
+  const img  = document.getElementById('pImg').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  const available = document.getElementById('pAvail').checked;
+  if (!name || !cat || !unit) { alert('Заполните название, категорию и единицу'); return; }
+  const btn = document.getElementById('saveProd');
+  btn.disabled = true; btn.textContent = 'Сохранение…';
+  try {
+    let next;
+    if (editingId) {
+      next = products.map(p => p.id === editingId ? {...p, name, cat, unit, price, emoji, img, desc, available} : p);
+    } else {
+      const id = products.reduce((m,p) => Math.max(m, p.id), 0) + 1;
+      next = [...products, { id, name, cat, unit, price, emoji, img, desc, available }];
+    }
+    await persist(next);
+    toast(editingId ? 'Товар обновлён' : 'Товар добавлен');
+    closeModal();
+  } catch(e) {
+    alert('Ошибка сохранения: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Сохранить';
+  }
+}
+
+/* ── TELEGRAM SETTINGS ── */
+document.getElementById('saveTgBtn').addEventListener('click', async () => {
+  const token  = document.getElementById('tgToken').value.trim();
+  const chatId = document.getElementById('tgChat').value.trim();
+  const btn = document.getElementById('saveTgBtn');
+  btn.disabled = true; btn.textContent = 'Сохранение…';
+  try {
+    await set(ref(db, 'config'), { token, chatId });
+    await update(ref(db, 'meta'), { version: Date.now(), updatedAt: serverTimestamp() });
+    toast('Настройки сохранены');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Сохранить настройки';
+  }
+});
+</script>
+</body>
+</html>
