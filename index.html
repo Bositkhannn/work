@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vast Clever - Tovar Katalogi</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        (function() {
+            const appVersion = '2.0.1'; // версия увеличена
+            const lastVersion = localStorage.getItem('vastCleverVersion');
+            if (lastVersion !== appVersion) {
+                console.log('🔄 Новая версия найдена, обновляю кеш...');
+                localStorage.clear();
+                localStorage.setItem('vastCleverVersion', appVersion);
+                location.reload(true);
+            }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>" />
+    <style>
+        /* ============================================================
+           ВСЕ ВАШИ СТИЛИ (скопированы из исходного index.html)
+           ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #F4F8F5; --surface: #FFFFFF; --surface2: #E8F5ED; --primary: #1A7A3C;
+            --primary2: #145C2D; --primaryL: #D1EAD9; --accent: #F59E0B; --text: #0F2117;
+            --text2: #4A6358; --text3: #8FA89A; --border: #D8EAE0; --red: #DC2626;
+            --shadow: 0 1px 4px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.05);
+            --radius: 14px; --transition: 0.18s ease; --header-pad: 8px 10px;
+            --container-pad: 0 10px; --container-max: 100%; --grid-min: 110px;
+            --grid-gap: 8px; --font-base: 13px; --modal-radius: 0px; --modal-max: 100%;
+        }
+        [data-theme="ocean"] {
+            --bg: #EFF6FF; --surface: #FFFFFF; --surface2: #DBEAFE;
+            --primary: #1D4ED8; --primary2: #1E3A8A; --primaryL: #BFDBFE;
+            --text: #0F172A; --text2: #3B5280; --text3: #94A3B8; --border: #BFDBFE;
+        }
+        [data-theme="slate"] {
+            --bg: #F1F5F9; --surface: #FFFFFF; --surface2: #E2E8F0;
+            --primary: #475569; --primary2: #334155; --primaryL: #CBD5E1;
+            --text: #0F172A; --text2: #475569; --text3: #94A3B8; --border: #CBD5E1;
+        }
+        [data-theme="night"] {
+            --bg: #0F1923; --surface: #1A2535; --surface2: #1E3040;
+            --primary: #22C55E; --primary2: #16A34A; --primaryL: #14532D;
+            --text: #E2F0E8; --text2: #8FB5A0; --text3: #4A6A58; --border: #1E3A2A;
+            --shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        @media (min-width: 768px) {
+            :root {
+                --header-pad: 14px 20px; --container-pad: 0 20px; --container-max: 900px;
+                --grid-min: 150px; --grid-gap: 12px; --font-base: 16px; --modal-radius: 18px;
+                --modal-max: 700px;
+            }
+        }
+        @media (max-width: 480px) {
+            .logo { font-size: 0.9rem !important; }
+            .logo-sub { display: none !important; }
+            .logo-icon { width: 28px; height: 28px; font-size: 0.8rem; }
+            .btn-order-top { font-size: 0.65rem !important; padding: 6px 10px !important; }
+            .lang-btn { font-size: 0.6rem !important; padding: 3px 5px !important; }
+            .theme-dot { width: 14px !important; height: 14px !important; }
+            .header-right { gap: 4px !important; }
+            .header-inner { gap: 6px !important; }
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; font-size: var(--font-base); background: var(--bg); color: var(--text); min-height: 100vh; transition: background var(--transition), color var(--transition); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        header { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: var(--header-pad); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+        .header-inner { max-width: var(--container-max); margin: 0 auto; padding: var(--container-pad); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--primary); display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+        .logo-sub { font-size: 0.6rem; color: var(--text3); font-weight: 500; margin-top: 1px; }
+        .header-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+        .btn-order-top { background: var(--primary); color: #fff; border: none; border-radius: 9px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.75rem; padding: 9px 14px; cursor: pointer; transition: background var(--transition), transform 0.1s; white-space: nowrap; }
+        .btn-order-top:hover { background: var(--primary2); }
+        .btn-order-top:active { transform: scale(0.97); }
+        .lang-switcher { display: flex; gap: 4px; background: var(--surface2); border-radius: 8px; padding: 3px; }
+        .lang-btn { background: none; border: none; color: var(--text2); font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 5px 8px; cursor: pointer; border-radius: 5px; transition: all var(--transition); }
+        .lang-btn.active { background: var(--surface); color: var(--primary); }
+        .lang-btn:hover { color: var(--primary); }
+        .theme-switcher { display: flex; gap: 4px; align-items: center; }
+        .theme-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s, border-color 0.15s; flex-shrink: 0; }
+        .theme-dot:hover, .theme-dot.active { transform: scale(1.15); }
+        .theme-dot.active { border-color: var(--text); }
+        .theme-dot[data-t="fresh"] { background: linear-gradient(135deg, #1A7A3C, #4ADE80); }
+        .theme-dot[data-t="ocean"] { background: linear-gradient(135deg, #1D4ED8, #60A5FA); }
+        .theme-dot[data-t="slate"] { background: linear-gradient(135deg, #475569, #94A3B8); }
+        .theme-dot[data-t="night"] { background: linear-gradient(135deg, #0F1923, #22C55E); }
+        @media (min-width: 768px) {
+            .logo { font-size: 1.2rem; } .logo-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 9px; } .logo-sub { font-size: 0.65rem; }
+            .btn-order-top { font-size: 0.85rem; padding: 11px 18px; border-radius: 10px; } .lang-btn { font-size: 0.75rem; padding: 6px 10px; }
+            .theme-dot { width: 18px; height: 18px; } .header-right { gap: 10px; } .lang-switcher { gap: 5px; padding: 4px; }
+        }
+
+        .controls { max-width: var(--container-max); margin: 14px auto 0; padding: var(--container-pad); }
+        .search-wrap { position: relative; }
+        .search-wrap input { width: 100%; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.85rem; padding: 10px 12px 10px 36px; outline: none; transition: border-color var(--transition); }
+        .search-wrap input:focus { border-color: var(--primary); }
+        .search-wrap input::placeholder { color: var(--text3); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; width: 15px; height: 15px; }
+        @media (min-width: 768px) { .controls { margin-top: 18px; } .search-wrap input { font-size: 0.9rem; padding: 11px 14px 11px 40px; } .search-icon { left: 13px; width: 16px; height: 16px; } }
+
+        .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+        .btn-filter-toggle { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; color: var(--text2); font-size: 0.72rem; font-weight: 600; padding: 5px 12px; cursor: pointer; transition: all var(--transition); font-family: 'Inter', sans-serif; white-space: nowrap; position: relative; }
+        .btn-filter-toggle:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-filter-toggle.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+        .btn-filter-toggle .arrow { margin-left: 4px; font-size: 0.6rem; }
+        .brand-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 8px 0; min-width: 160px; box-shadow: var(--shadow); z-index: 50; max-height: 200px; overflow-y: auto; }
+        .brand-dropdown.open { display: block; }
+        .brand-dropdown .brand-item { padding: 6px 16px; font-size: 0.8rem; cursor: pointer; transition: background var(--transition); color: var(--text); font-family: 'Inter', sans-serif; white-space: nowrap; }
+        .brand-dropdown .brand-item:hover { background: var(--surface2); }
+        .brand-dropdown .brand-item.active { background: var(--primary); color: #fff; }
+
+        .filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px; scrollbar-width: none; flex: 1; }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .tab { flex-shrink: 0; padding: 5px 13px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--border); color: var(--text2); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all var(--transition); font-family: 'Inter', sans-serif; }
+        .tab:hover { border-color: var(--primary); color: var(--primary); }
+        .tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+        @media (min-width: 768px) { .filter-tabs { gap: 7px; padding: 8px 0 4px; } .tab { padding: 6px 15px; font-size: 0.78rem; border-radius: 20px; } }
+
+        .grid-wrap { max-width: var(--container-max); margin: 12px auto 0; padding: var(--container-pad); padding-bottom: 50px; display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr)); gap: var(--grid-gap); }
+        @media (min-width: 768px) { .grid-wrap { margin-top: 16px; padding-bottom: 50px; } }
+
+        .card { background: var(--surface); border-radius: var(--radius); border: 1.5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition); cursor: pointer; }
+        .card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); }
+        .card-img { width: 100%; aspect-ratio: 1; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 2.8rem; overflow: hidden; position: relative; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .card-body { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .card-cat { font-size: 0.55rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .card-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--text); line-height: 1.3; }
+        .card-price { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--primary); margin-top: auto; padding-top: 3px; }
+        .card-price .unit { font-size: 0.6rem; color: var(--text3); font-weight: 500; }
+        @media (min-width: 768px) { .card-img { font-size: 3.2rem; } .card-body { padding: 10px 12px; gap: 5px; } .card-cat { font-size: 0.62rem; letter-spacing: 0.6px; } .card-name { font-size: 0.85rem; } .card-price { font-size: 1rem; padding-top: 4px; } .card-price .unit { font-size: 0.68rem; } }
+
+        .card-promo { position: absolute; top: 8px; left: 8px; background: rgba(26, 122, 60, 0.9); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; z-index: 2; pointer-events: none; }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); grid-column: 1 / -1; }
+        .empty-state .ei { font-size: 2.4rem; margin-bottom: 10px; opacity: 0.6; }
+        @media (min-width: 768px) { .empty-state { padding: 50px 20px; } .empty-state .ei { font-size: 2.8rem; margin-bottom: 12px; } }
+
+        .regions-overlay, .product-detail-overlay, .contact-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(3px); z-index: 200; display: flex; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+        .regions-overlay { align-items: flex-end; }
+        .product-detail-overlay, .contact-overlay { align-items: center; }
+        .regions-overlay.open, .product-detail-overlay.open, .contact-overlay.open { opacity: 1; pointer-events: all; }
+        .regions-sheet, .product-detail-modal, .contact-modal { background: var(--surface); width: 100%; max-width: var(--modal-max); padding: 6px 20px 32px; max-height: 92vh; overflow-y: auto; position: relative; }
+        .regions-sheet { border-radius: 18px 18px 0 0; transform: translateY(24px); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.4, 1); }
+        .regions-overlay.open .regions-sheet { transform: translateY(0); }
+        .product-detail-modal, .contact-modal { border-radius: 18px; transform: translateY(0) scale(0.95); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.25s; opacity: 0; }
+        .product-detail-overlay.open .product-detail-modal, .contact-overlay.open .contact-modal { transform: translateY(0) scale(1); opacity: 1; }
+        @media (min-width: 768px) {
+            .regions-sheet { border-radius: 22px; max-height: 88vh; padding: 6px 24px 40px; transform: translateY(0) scale(0.95); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.25s; opacity: 0; }
+            .regions-overlay.open .regions-sheet { transform: translateY(0) scale(1); opacity: 1; }
+            .product-detail-modal, .contact-modal { border-radius: 22px; max-height: 90vh; padding: 6px 24px 40px; }
+            .regions-overlay, .product-detail-overlay, .contact-overlay { align-items: center; }
+        }
+        .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 16px; }
+        .product-detail-modal .sheet-handle, .contact-modal .sheet-handle { display: none; }
+        .sheet-close { position: absolute; top: 12px; right: 14px; background: var(--surface2); border: none; color: var(--text2); width: 30px; height: 30px; border-radius: 50%; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+        .sheet-close:hover { background: var(--border); }
+        @media (min-width: 768px) { .sheet-handle { margin: 14px auto 20px; } .sheet-close { top: 14px; right: 18px; width: 32px; height: 32px; font-size: 1rem; } }
+        .regions-title, .product-detail-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text); margin-bottom: 16px; }
+        @media (min-width: 768px) { .regions-title, .product-detail-title { font-size: 1.25rem; margin-bottom: 20px; } }
+        .regions-list { display: flex; flex-direction: column; gap: 8px; }
+        .region-item { background: var(--surface2); border-radius: 11px; padding: 14px 12px; cursor: pointer; transition: all var(--transition); border: 1.5px solid transparent; }
+        .region-item:hover { background: var(--primaryL); border-color: var(--primary); transform: translateX(4px); }
+        .region-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text); margin-bottom: 6px; }
+        .region-contact { font-size: 0.72rem; color: var(--text2); line-height: 1.5; }
+        .region-contact-label { font-weight: 600; color: var(--primary); margin-top: 4px; }
+        @media (min-width: 768px) { .regions-list { gap: 10px; } .region-item { padding: 16px 14px; border-radius: 12px; } .region-name { font-size: 0.95rem; margin-bottom: 8px; } .region-contact { font-size: 0.78rem; line-height: 1.6; } }
+
+        .detail-content { display: flex; flex-direction: column; gap: 14px; padding-top: 6px; }
+        .detail-image { width: 100%; max-height: 320px; background: var(--surface2); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .detail-image img { width: 100%; height: 100%; max-height: 320px; object-fit: contain; }
+        .detail-image .emoji-big { font-size: 4rem; padding: 24px 0; }
+        .detail-category { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.7px; font-weight: 600; }
+        .detail-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text); }
+        .detail-price { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary); }
+        .detail-price .unit { font-size: 0.8rem; color: var(--text3); font-weight: 500; }
+        .detail-description { font-size: 0.85rem; color: var(--text2); line-height: 1.5; margin-top: 2px; border-top: 1px solid var(--border); padding-top: 12px; }
+        .product-detail-promo-box { background: rgba(26, 122, 60, 0.12); border-left: 4px solid var(--primary); border-radius: 8px; padding: 12px 14px; margin: 6px 0 4px; font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
+        @media (min-width: 768px) { .detail-content { gap: 18px; padding-top: 10px; } .detail-image { max-height: 500px; border-radius: 14px; } .detail-image img { max-height: 500px; } .detail-image .emoji-big { font-size: 5rem; padding: 30px 0; } .detail-category { font-size: 0.75rem; letter-spacing: 0.8px; } .detail-name { font-size: 1.3rem; } .detail-price { font-size: 1.5rem; } .detail-price .unit { font-size: 0.9rem; } .detail-description { font-size: 0.95rem; line-height: 1.6; padding-top: 14px; } .product-detail-promo-box { font-size: 0.9rem; padding: 14px 18px; } }
+
+        .contact-content { padding-top: 6px; display: flex; flex-direction: column; gap: 16px; }
+        .contact-agent-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text); }
+        .contact-region { font-size: 0.8rem; color: var(--text2); margin-top: -8px; }
+        .contact-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; background: var(--surface2); padding: 10px 12px; border-radius: 11px; }
+        .contact-label { font-weight: 600; font-size: 0.8rem; color: var(--text2); min-width: 50px; }
+        .contact-value { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.9rem; color: var(--text); flex: 1; word-break: break-all; }
+        .contact-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--primary); color: #fff; font-size: 1rem; cursor: pointer; transition: background var(--transition), transform 0.1s; flex-shrink: 0; }
+        .contact-btn:hover { background: var(--primary2); }
+        .contact-btn:active { transform: scale(0.92); }
+        .contact-btn.copy-btn { background: var(--surface); color: var(--text2); border: 1.5px solid var(--border); }
+        .contact-btn.copy-btn:hover { background: var(--border); color: var(--text); }
+        .contact-btn.tg-btn { background: #0088cc; }
+        .contact-btn.tg-btn:hover { background: #0077b3; }
+        .contact-call-btn { background: #22c55e; }
+        .contact-call-btn:hover { background: #16a34a; }
+        @media (min-width: 768px) { .contact-content { padding-top: 10px; gap: 20px; } .contact-agent-name { font-size: 1.2rem; } .contact-region { font-size: 0.9rem; margin-top: -10px; } .contact-row { gap: 8px; padding: 12px 14px; border-radius: 12px; } .contact-label { font-size: 0.85rem; min-width: 60px; } .contact-value { font-size: 1rem; } .contact-btn { width: 38px; height: 38px; font-size: 1.1rem; } }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
+        .toast.show { opacity: 1; }
+        @media (min-width: 768px) { .toast { padding: 10px 24px; font-size: 0.9rem; max-width: none; } }
+    </style>
+</head>
+<body data-theme="fresh">
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">🏪</div>
+                <div>
+                    <div id="logoTitle">VastClever</div>
+                    <div class="logo-sub" id="logoSub">Каталог товаров</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn-order-top" id="orderBtn">📍 Заказать</button>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="uz">O'z</button>
+                    <button class="lang-btn" data-lang="ru">Ру</button>
+                </div>
+                <div class="theme-switcher">
+                    <div class="theme-dot active" data-t="fresh" title="Зелёная"></div>
+                    <div class="theme-dot" data-t="ocean" title="Синяя"></div>
+                    <div class="theme-dot" data-t="slate" title="Серая"></div>
+                    <div class="theme-dot" data-t="night" title="Ночная"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <div class="search-wrap">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="searchInput" placeholder="Поиск…" />
+        </div>
+        <div class="filter-row">
+            <div class="btn-filter-toggle" id="brandToggle">
+                <span id="brandToggleLabel">Бренд ▾</span>
+                <div class="brand-dropdown" id="brandDropdown"></div>
+            </div>
+            <div class="filter-tabs" id="filterTabs"></div>
+        </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid-wrap" id="productGrid"></div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div class="product-detail-overlay" id="productDetailOverlay">
+        <div class="product-detail-modal">
+            <button class="sheet-close" id="detailClose">✕</button>
+            <div class="detail-content">
+                <div class="detail-image" id="detailImage">
+                    <img id="detailImg" src="" alt="Product" />
+                </div>
+                <div class="detail-category" id="detailCat"></div>
+                <div class="detail-name" id="detailName"></div>
+                <div class="detail-price" id="detailPrice"></div>
+                <div id="detailPromoBox" class="product-detail-promo-box" style="display:none;"></div>
+                <div class="detail-description" id="detailDesc"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGIONS MODAL -->
+    <div class="regions-overlay" id="regionsOverlay">
+        <div class="regions-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" id="regionsClose">✕</button>
+            <div class="regions-title" id="regionsTitle">Выберите ваш регион</div>
+            <div class="regions-list" id="regionsList"></div>
+        </div>
+    </div>
+
+    <!-- CONTACT MODAL -->
+    <div class="contact-overlay" id="contactOverlay">
+        <div class="contact-modal">
+            <button class="sheet-close" id="contactClose">✕</button>
+            <div class="contact-content">
+                <div class="contact-agent-name" id="contactAgentName"></div>
+                <div class="contact-region" id="contactRegion"></div>
+                <div class="contact-row">
+                    <span class="contact-label">📞</span>
+                    <span class="contact-value" id="contactPhone"></span>
+                    <button class="contact-btn copy-btn" id="copyPhoneBtn" title="Копировать номер">📋</button>
+                    <a class="contact-btn contact-call-btn" id="callBtn" href="#" title="Позвонить">📞</a>
+                </div>
+                <div class="contact-row">
+                    <span class="contact-label">💬</span>
+                    <span class="contact-value" id="contactTelegram"></span>
+                    <button class="contact-btn copy-btn" id="copyTgBtn" title="Копировать Telegram">📋</button>
+                    <a class="contact-btn tg-btn" id="tgBtn" href="#" title="Написать в Telegram">💬</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================ -->
+    <!-- 1. i18n -->
+    <script src="i18n.js"></script>
+
+    <!-- 2. data.js (для миграции, можно удалить после переноса данных) -->
+    <script src="data.js"></script>
+
+    <!-- ============================================================ -->
+    <!-- 3. Основной скрипт приложения (без type="module") -->
+    <script>
+        // ===== HARD REFRESH on back navigation =====
+        if (performance.navigation && performance.navigation.type !== 1) {
+            localStorage.setItem('lastVisit', Date.now());
+        } else if (performance.navigation) {
+            window.location.replace(window.location.href);
+        }
+
+        /* ══════════════════════════════════════
+           THEME
+        ══════════════════════════════════════ */
+        function applyTheme(t) {
+            document.body.dataset.theme = t;
+            document.querySelectorAll('.theme-dot').forEach(d => {
+                d.classList.toggle('active', d.dataset.t === t);
+            });
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'fresh';
+        applyTheme(savedTheme);
+
+        document.querySelectorAll('.theme-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                applyTheme(dot.dataset.t);
+                localStorage.setItem('theme', dot.dataset.t);
+            });
+        });
+
+        /* ══════════════════════════════════════
+           LANGUAGE
+        ══════════════════════════════════════ */
+        function updateUI() {
+            const lang = getCurrentLang();
+
+            document.getElementById('logoTitle').textContent = t('catalogTitle');
+            document.getElementById('logoSub').textContent = t('catalogSubtitle');
+            document.getElementById('orderBtn').textContent = t('orderBtn');
+            document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+            document.getElementById('regionsTitle').textContent = t('selectRegion');
+
+            document.getElementById('brandToggleLabel').textContent = t('filterBrand') + ' ▾';
+
+            renderAll();
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                setLanguage(lang);
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                updateUI();
+            });
+        });
+
+        document.querySelector(`.lang-btn[data-lang="${getCurrentLang()}"]`)?.classList.add('active');
+
+        /* ══════════════════════════════════════
+           REGIONS (агенты из Firestore)
+        ══════════════════════════════════════ */
+        function renderRegions() {
+            const list = document.getElementById('regionsList');
+            const lang = getCurrentLang();
+            const regions = window.agentsList || [];
+            if (!regions.length) {
+                list.innerHTML = '<div class="empty-state"><span class="ei">📋</span><p>Регионы загружаются...</p></div>';
+                return;
+            }
+            list.innerHTML = regions.map((r, i) => `
+                <div class="region-item" onclick="openContact(${i})">
+                    <div class="region-name">${lang === 'uz' ? r.name_uz : r.name_ru}</div>
+                    <div class="region-contact">
+                        <div><span class="region-contact-label">${t('agentLabel')}</span> ${lang === 'uz' ? r.agent_uz : r.agent_ru}</div>
+                        <div><span class="region-contact-label">${t('phoneLabel')}</span> ${r.phone}</div>
+                        <div><span class="region-contact-label">${t('telegramLabel')}</span> ${r.telegram}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('orderBtn').addEventListener('click', () => {
+            document.getElementById('regionsOverlay').classList.add('open');
+        });
+
+        document.getElementById('regionsClose').addEventListener('click', () => {
+            document.getElementById('regionsOverlay').classList.remove('open');
+        });
+
+        document.getElementById('regionsOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('regionsOverlay'))
+                document.getElementById('regionsOverlay').classList.remove('open');
+        });
+
+        /* ══════════════════════════════════════
+           CONTACT MODAL
+        ══════════════════════════════════════ */
+        function openContact(index) {
+            const r = window.agentsList[index];
+            if (!r) return;
+            const lang = getCurrentLang();
+            const regionName = lang === 'uz' ? r.name_uz : r.name_ru;
+            const agentName = lang === 'uz' ? r.agent_uz : r.agent_ru;
+
+            document.getElementById('contactAgentName').textContent = agentName;
+            document.getElementById('contactRegion').textContent = regionName;
+
+            const phone = r.phone || '';
+            const phoneDigits = phone.replace(/[^\d+]/g, '');
+            document.getElementById('contactPhone').textContent = phone;
+            document.getElementById('callBtn').href = 'tel:' + phoneDigits;
+
+            const tg = r.telegram || '';
+            const tgUsername = tg.replace(/^@+/, '');
+            document.getElementById('contactTelegram').textContent = tg;
+            document.getElementById('tgBtn').href = 'tg://resolve?domain=' + tgUsername;
+
+            document.getElementById('regionsOverlay').classList.remove('open');
+            document.getElementById('contactOverlay').classList.add('open');
+        }
+
+        document.getElementById('contactClose').addEventListener('click', () => {
+            document.getElementById('contactOverlay').classList.remove('open');
+        });
+        document.getElementById('contactOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('contactOverlay')) {
+                document.getElementById('contactOverlay').classList.remove('open');
+            }
+        });
+
+        /* ══════════════════════════════════════
+           COPY TO CLIPBOARD
+        ══════════════════════════════════════ */
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showToast(message)).catch(() => fallbackCopy(text, message));
+            } else {
+                fallbackCopy(text, message);
+            }
+        }
+
+        function fallbackCopy(text, message) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(message);
+            } catch (e) {
+                showToast('Не удалось скопировать');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._hide);
+            toast._hide = setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        document.getElementById('copyPhoneBtn').addEventListener('click', () => {
+            const phone = document.getElementById('contactPhone').textContent;
+            copyToClipboard(phone, '📞 Номер скопирован!');
+        });
+
+        document.getElementById('copyTgBtn').addEventListener('click', () => {
+            const tg = document.getElementById('contactTelegram').textContent;
+            copyToClipboard(tg, '💬 Telegram скопирован!');
+        });
+
+        /* ══════════════════════════════════════
+           TABS (категории) — строятся из window.productsList
+        ══════════════════════════════════════ */
+        let activeFilter = 'all';
+        let activeBrand = 'all';
+
+        function renderTabs() {
+            const tabs = document.getElementById('filterTabs');
+            const lang = getCurrentLang();
+            const products = window.productsList || [];
+            const cats = [...new Set(products.map(p => lang === 'uz' ? p.cat_uz : p.cat_ru))];
+            tabs.innerHTML = `<button class="tab active" data-cat="all">${t('allTab')}</button>`;
+            cats.forEach(cat => {
+                const b = document.createElement('button');
+                b.className = 'tab';
+                b.dataset.cat = cat;
+                b.textContent = cat;
+                tabs.appendChild(b);
+            });
+            tabs.querySelectorAll('.tab').forEach(t => {
+                t.addEventListener('click', () => {
+                    tabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                    activeFilter = t.dataset.cat;
+                    renderGrid();
+                });
+            });
+        }
+
+        /* ══════════════════════════════════════
+           BRAND DROPDOWN — из window.productsList
+        ══════════════════════════════════════ */
+        function renderBrandDropdown() {
+            const dropdown = document.getElementById('brandDropdown');
+            const lang = getCurrentLang();
+            const products = window.productsList || [];
+            const brands = [...new Set(products.map(p => lang === 'uz' ? p.brand_uz : p.brand_ru))].filter(Boolean);
+            dropdown.innerHTML = `
+                <div class="brand-item active" data-brand="all">${t('allBrands')}</div>
+                ${brands.map(b => `<div class="brand-item" data-brand="${b}">${b}</div>`).join('')}
+            `;
+            dropdown.querySelectorAll('.brand-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const brand = item.dataset.brand;
+                    activeBrand = brand;
+                    dropdown.querySelectorAll('.brand-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    const label = document.getElementById('brandToggleLabel');
+                    if (brand === 'all') {
+                        label.textContent = t('filterBrand') + ' ▾';
+                    } else {
+                        label.textContent = brand + ' ▾';
+                    }
+                    document.getElementById('brandDropdown').classList.remove('open');
+                    document.getElementById('brandToggle').classList.remove('active');
+                    renderGrid();
+                });
+            });
+        }
+
+        document.getElementById('brandToggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dd = document.getElementById('brandDropdown');
+            const toggle = document.getElementById('brandToggle');
+            dd.classList.toggle('open');
+            toggle.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('brandDropdown').classList.remove('open');
+            document.getElementById('brandToggle').classList.remove('active');
+        });
+
+        /* ══════════════════════════════════════
+           GRID — использует window.productsList
+        ══════════════════════════════════════ */
+        function getFiltered() {
+            const lang = getCurrentLang();
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const products = window.productsList || [];
+            return products.filter(p => {
+                const name = lang === 'uz' ? p.name_uz : p.name_ru;
+                const cat = lang === 'uz' ? p.cat_uz : p.cat_ru;
+                const brand = lang === 'uz' ? p.brand_uz : p.brand_ru;
+                const mc = activeFilter === 'all' || cat === activeFilter;
+                const mb = activeBrand === 'all' || brand === activeBrand;
+                const mq = !q || name.toLowerCase().includes(q) || cat.toLowerCase().includes(q);
+                return mc && mb && mq;
+            });
+        }
+
+        function renderGrid() {
+            const lang = getCurrentLang();
+            const grid = document.getElementById('productGrid');
+            const filtered = getFiltered();
+            if (!filtered.length) {
+                grid.innerHTML = `<div class="empty-state"><span class="ei">🔍</span><p>${t('noResults')}</p></div>`;
+                return;
+            }
+            grid.innerHTML = '';
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const name = lang === 'uz' ? p.name_uz : p.name_ru;
+                const cat = lang === 'uz' ? p.cat_uz : p.cat_ru;
+                const unit = lang === 'uz' ? p.unit_uz : p.unit_ru;
+
+                let imgHtml = '';
+                if (p.img) {
+                    imgHtml = `<img src="${p.img}" alt="${name}" onerror="this.onerror=null; this.outerHTML='<span style=\\'font-size:2.8rem\\'>${p.emoji}</span>';">`;
+                } else {
+                    imgHtml = `<span style="font-size:2.8rem">${p.emoji}</span>`;
+                }
+
+                const promoHtml = p.promo ? `<div class="card-promo">${p.promo}</div>` : '';
+
+                card.innerHTML = `
+                    <div class="card-img">
+                        ${imgHtml}
+                        ${promoHtml}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-cat">${cat}</div>
+                        <div class="card-name">${name}</div>
+                        <div class="card-price">${p.price.toLocaleString()} <span class="unit">${t('sum')}${unit}</span></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                card.addEventListener('click', () => openProductDetail(p.id || p._id));
+            });
+        }
+
+        /* ══════════════════════════════════════
+           PRODUCT DETAIL MODAL
+        ══════════════════════════════════════ */
+        function openProductDetail(id) {
+            const products = window.productsList || [];
+            const p = products.find(x => x.id === id || x._id === id);
+            if (!p) return;
+            const lang = getCurrentLang();
+
+            const img = document.getElementById('detailImg');
+            const imgContainer = document.getElementById('detailImage');
+
+            const oldEmoji = imgContainer.querySelector('.emoji-big');
+            if (oldEmoji) oldEmoji.remove();
+
+            if (p.img) {
+                img.src = p.img;
+                img.style.display = 'block';
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    let emojiEl = document.createElement('span');
+                    emojiEl.className = 'emoji-big';
+                    emojiEl.textContent = p.emoji || '📦';
+                    imgContainer.appendChild(emojiEl);
+                };
+            } else {
+                img.style.display = 'none';
+                let emojiEl = document.createElement('span');
+                emojiEl.className = 'emoji-big';
+                emojiEl.textContent = p.emoji || '📦';
+                imgContainer.appendChild(emojiEl);
+            }
+
+            document.getElementById('detailCat').textContent = lang === 'uz' ? p.cat_uz : p.cat_ru;
+            document.getElementById('detailName').textContent = lang === 'uz' ? p.name_uz : p.name_ru;
+            const unit = lang === 'uz' ? p.unit_uz : p.unit_ru;
+            document.getElementById('detailPrice').innerHTML = `${p.price.toLocaleString()} <span class="unit">${t('sum')}${unit}</span>`;
+
+            const promoBox = document.getElementById('detailPromoBox');
+            const promoDesc = lang === 'uz' ? p.promo_desc_uz : p.promo_desc_ru;
+            if (p.promo && promoDesc) {
+                promoBox.textContent = promoDesc;
+                promoBox.style.display = 'block';
+            } else {
+                promoBox.style.display = 'none';
+            }
+
+            document.getElementById('detailDesc').textContent = lang === 'uz' ? p.desc_uz : p.desc_ru;
+
+            document.getElementById('productDetailOverlay').classList.add('open');
+        }
+
+        document.getElementById('detailClose').addEventListener('click', () => {
+            document.getElementById('productDetailOverlay').classList.remove('open');
+        });
+        document.getElementById('productDetailOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('productDetailOverlay')) {
+                document.getElementById('productDetailOverlay').classList.remove('open');
+            }
+        });
+
+        /* ══════════════════════════════════════
+           SEARCH
+        ══════════════════════════════════════ */
+        document.getElementById('searchInput').addEventListener('input', renderGrid);
+
+        /* ══════════════════════════════════════
+           ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ ВСЕГО
+        ══════════════════════════════════════ */
+        window.renderAll = function() {
+            renderTabs();
+            renderBrandDropdown();
+            renderGrid();
+            renderRegions();
+        };
+
+        /* ══════════════════════════════════════
+           INIT (выполняется после загрузки DOM)
+        ══════════════════════════════════════ */
+        // Показываем заглушку загрузки, пока данные не пришли из Firestore
+        document.getElementById('productGrid').innerHTML = '<div class="empty-state"><span class="ei">⏳</span><p>Загрузка каталога...</p></div>';
+        document.getElementById('regionsList').innerHTML = '<div class="empty-state">Загрузка регионов...</div>';
+
+        // Инициализация языка и темы
+        updateUI();
+
+        // Удаляем service workers (как и раньше)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.unregister();
+                });
+            });
+        }
+
+        console.log("✅ Приложение инициализировано, ожидаем данные из Firestore.");
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- 4. Модуль Firebase (загружается после основного скрипта) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            onSnapshot,
+            addDoc,
+            deleteDoc,
+            doc
+        } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD75JwH81bGZzi4gdELeD_D2jlNaON8R3M",
+            authDomain: "vastclever-99f4f.firebaseapp.com",
+            projectId: "vastclever-99f4f",
+            storageBucket: "vastclever-99f4f.firebasestorage.app",
+            messagingSenderId: "261135526673",
+            appId: "1:261135526673:web:4193d68cfdd563a0a13ab0",
+            measurementId: "G-B245HZQEM5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Глобальные массивы (инициализируем)
+        window.productsList = [];
+        window.agentsList = [];
+
+        // ================================================
+        //  ПОДПИСКА НА ТОВАРЫ С ФИЛЬТРОМ isHidden
+        // ================================================
+        onSnapshot(collection(db, "products"), (snapshot) => {
+            // Забираем все документы и фильтруем: оставляем только те, где isHidden !== true
+            window.productsList = snapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(item => item.isHidden !== true);
+            console.log("🔥 Товары обновлены (Firestore):", window.productsList.length);
+            if (typeof window.renderAll === 'function') window.renderAll();
+        }, (error) => {
+            console.error("Ошибка загрузки товаров:", error);
+        });
+
+        // ================================================
+        //  ПОДПИСКА НА АГЕНТОВ (без фильтра)
+        // ================================================
+        onSnapshot(collection(db, "agents"), (snapshot) => {
+            window.agentsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log("🔥 Агенты обновлены (Firestore):", window.agentsList.length);
+            if (typeof window.renderAll === 'function') window.renderAll();
+        }, (error) => {
+            console.error("Ошибка загрузки агентов:", error);
+        });
+
+        // Экспортируем функции для администрирования
+        window.dbOps = {
+            addProduct: async (productData) => addDoc(collection(db, "products"), productData),
+            deleteProduct: async (id) => deleteDoc(doc(db, "products", id)),
+            addAgent: async (agentData) => addDoc(collection(db, "agents"), agentData),
+            deleteAgent: async (id) => deleteDoc(doc(db, "agents", id))
+        };
+
+        console.log("✅ Firebase подключён, слушатели активны.");
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- Скрипт миграции (можно удалить после переноса данных) -->
+    <script type="module">
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            addDoc
+        } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+        const db = getFirestore();
+
+        window.migrateData = async function() {
+            console.log("🚀 Начинаем миграцию данных...");
+            try {
+                if (typeof products !== "undefined" && Array.isArray(products) && products.length > 0) {
+                    const prodRef = collection(db, "products");
+                    const existingProds = await getDocs(prodRef);
+                    if (existingProds.empty) {
+                        console.log(`Загружаем ${products.length} товаров...`);
+                        for (const item of products) {
+                            await addDoc(prodRef, item);
+                        }
+                        console.log("✅ Товары перенесены!");
+                    } else {
+                        console.log("⚠️ Товары уже существуют, пропускаем.");
+                    }
+                } else {
+                    console.warn("❌ Массив 'products' не найден или пуст.");
+                }
+
+                if (typeof agents !== "undefined" && Array.isArray(agents) && agents.length > 0) {
+                    const agentRef = collection(db, "agents");
+                    const existingAgents = await getDocs(agentRef);
+                    if (existingAgents.empty) {
+                        console.log(`Загружаем ${agents.length} агентов...`);
+                        for (const item of agents) {
+                            await addDoc(agentRef, item);
+                        }
+                        console.log("✅ Агенты перенесены!");
+                    } else {
+                        console.log("⚠️ Агенты уже существуют, пропускаем.");
+                    }
+                } else {
+                    console.warn("❌ Массив 'agents' не найден или пуст.");
+                }
+                console.log("🎉 Миграция завершена!");
+            } catch (error) {
+                console.error("🔥 Ошибка миграции:", error);
+            }
+        };
+
+        console.log("💡 Для миграции данных выполните в консоли: migrateData()");
+    </script>
+</body>
+</html>
